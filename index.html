@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опросник</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px; /* Отступ для кнопки */
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .redirect-button {
+            background-color: #008CBA; /* Цвет для кнопки перехода */
+        }
+        .redirect-button:hover {
+            background-color: #007B9E; /* Цвет при наведении */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Опросник</h1>
+    
+    <form id="surveyForm">
+        <div class="question">
+            <label for="name">ФИО:</label>
+            <input type="text" id="name" required>
+        </div>
+
+        <h2>Общие вопросы</h2>
+        <div class="question">
+            <label>Есть ли у вас непрерывная усталость?</label>
+            <input type="radio" name="fatigue" value="2" required> Да
+            <input type="radio" name="fatigue" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Заметили ли вы резкое снижение веса без видимой причины?</label>
+            <input type="radio" name="weightLoss" value="5" required> Да
+            <input type="radio" name="weightLoss" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Испытываете ли вы хроническую боль, которую трудно объяснить?</label>
+            <input type="radio" name="chronicPain" value="2" required> Да
+            <input type="radio" name="chronicPain" value="0"> Нет
+        </div>
+
+        <h2>Вопросы о симптомах</h2>
+        <div class="question">
+            <label>Есть ли у вас новые или изменяющиеся родинки или кожные изменения?</label>
+            <input type="radio" name="moleChanges" value="3" required> Да
+            <input type="radio" name="moleChanges" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Заметили ли вы кровотечения или выделения, которые не должны быть?</label>
+            <input type="radio" name="unusualBleeding" value="4" required> Да
+            <input type="radio" name="unusualBleeding" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Проблемы с глотанием или изменениями в вашем аппетите?</label>
+            <input type="radio" name="swallowingAppetite" value="3" required> Да
+            <input type="radio" name="swallowingAppetite" value="0"> Нет
+        </div>
+
+        <h2>Вопросы о состоянии здоровья</h2>
+        <div class="question">
+            <label>Страдали ли вы от частых инфекций или простуд?</label>
+            <input type="radio" name="infections" value="2" required> Да
+            <input type="radio" name="infections" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Есть ли у вас история рака в семейном анамнезе?</label>
+            <input type="radio" name="familyHistory" value="5" required> Да
+            <input type="radio" name="familyHistory" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Изменялись ли функции мочеиспускания или стула?</label>
+            <input type="radio" name="urinationChanges" value="4" required> Да
+            <input type="radio" name="urinationChanges" value="0"> Нет
+        </div>
+
+        <h2>Вопросы о домашних условиях и образе жизни</h2>
+        <div class="question">
+            <label>Курите ли вы или употребляете алкоголь?</label>
+            <input type="radio" name="smokingAlcohol" value="3" required> Да
+            <input type="radio" name="smokingAlcohol" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Работаете ли вы в условиях, которые могут подвергать вас канцерогенам?</label>
+            <input type="radio" name="carcinogens" value="2" required> Да
+            <input type="radio" name="carcinogens" value="0"> Нет
+        </div>
+        <div class="question">
+            <label>Соблюдаете ли вы регулярные медицинские обследования?</label>
+            <input type="radio" name="medicalChecks" value="1" required> Да
+            <input type="radio" name="medicalChecks" value="0"> Нет
+        </div>
+
+        <button type="submit">Отправить</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px; display: none;"></div>
+    
+    <!-- Кнопка перенаправления на сайт врача -->
+    <button id="doctorSiteButton" class="redirect-button" style="display: none;">Перейти к врачу</button>
+</div>
+
+<script>
+    document.getElementById('surveyForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        let score = 0;
+
+        // Подсчет значений для каждого вопроса
+        const questions = [
+            'fatigue', 'weightLoss', 'chronicPain',
+            'moleChanges', 'unusualBleeding', 'swallowingAppetite',
+            'infections', 'familyHistory', 'urinationChanges',
+            'smokingAlcohol', 'carcinogens', 'medicalChecks'
+        ];
+
+        // Подсчет значений
+        questions.forEach(function(question) {
+            const answer = document.querySelector(`input[name="${question}"]:checked`);
+            if (answer) {
+                score += parseInt(answer.value); // Преобразование значения в число и прибавление
+            }
+        });
+
+        // Определение результата
+        const resultDiv = document.getElementById('result');
+        const doctorSiteButton = document.getElementById('doctorSiteButton');
+        let message;
+        
+        if (score >= 18) {
+            message = 'Вам следует обратиться к врачу. Возможные проблемы со здоровьем.';
+            doctorSiteButton.style.display = 'block'; // Показываем кнопку, если нужно обратиться к врачу
+        } else {
+            message = 'Нет явных признаков, чтобы обратиться к врачу.';
+            doctorSiteButton.style.display = 'none'; // Скрываем кнопку
+        }
+        
+        resultDiv.innerHTML = `<h2>Результат:</h2><p>${message}</p>`;
+        resultDiv.style.display = 'block';
+    });
+
+    // Обработчик для кнопки перенаправления на сайт
+    document.getElementById('doctorSiteButton').addEventListener('click', function() {
+        window.location.href = 'https://www.example.com'; // Замените URL на нужный сайт
+    });
+</script>
+
+</body>
+</html>
