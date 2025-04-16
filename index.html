@@ -130,7 +130,7 @@
         <div class="question">
             <label>Соблюдаете ли вы регулярные медицинские обследования?</label>
             <input type="radio" name="medicalChecks" value="0" required> Да
-            <input type="radio" name="medicalChecks" value="-5"> Нет
+            <input type="radio" name="medicalChecks" value="1"> Нет
         </div>
 
         <button type="submit">Отправить</button>
@@ -169,7 +169,7 @@
         const doctorSiteButton = document.getElementById('doctorSiteButton');
         let message;
         
-        if (score >= 1) {
+        if (score >= 18) {
             message = 'Вам следует обратиться к врачу. Возможные проблемы со здоровьем.';
             doctorSiteButton.style.display = 'block'; // Показываем кнопку, если нужно обратиться к врачу
         } else {
