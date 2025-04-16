@@ -73,7 +73,7 @@
         </div>
         <div class="question">
             <label>Заметили ли вы резкое снижение веса без видимой причины?</label>
-            <input type="radio" name="weightLoss" value="5" required> Да
+            <input type="radio" name="weightLoss" value="3" required> Да
             <input type="radio" name="weightLoss" value="0"> Нет
         </div>
         <div class="question">
@@ -85,17 +85,17 @@
         <h2>Вопросы о симптомах</h2>
         <div class="question">
             <label>Есть ли у вас новые или изменяющиеся родинки или кожные изменения?</label>
-            <input type="radio" name="moleChanges" value="3" required> Да
+            <input type="radio" name="moleChanges" value="2" required> Да
             <input type="radio" name="moleChanges" value="0"> Нет
         </div>
         <div class="question">
             <label>Заметили ли вы кровотечения или выделения, которые не должны быть?</label>
-            <input type="radio" name="unusualBleeding" value="4" required> Да
+            <input type="radio" name="unusualBleeding" value="3" required> Да
             <input type="radio" name="unusualBleeding" value="0"> Нет
         </div>
         <div class="question">
             <label>Проблемы с глотанием или изменениями в вашем аппетите?</label>
-            <input type="radio" name="swallowingAppetite" value="3" required> Да
+            <input type="radio" name="swallowingAppetite" value="2" required> Да
             <input type="radio" name="swallowingAppetite" value="0"> Нет
         </div>
 
@@ -107,24 +107,24 @@
         </div>
         <div class="question">
             <label>Есть ли у вас история рака в семейном анамнезе?</label>
-            <input type="radio" name="familyHistory" value="5" required> Да
+            <input type="radio" name="familyHistory" value="3" required> Да
             <input type="radio" name="familyHistory" value="0"> Нет
         </div>
         <div class="question">
             <label>Изменялись ли функции мочеиспускания или стула?</label>
-            <input type="radio" name="urinationChanges" value="4" required> Да
+            <input type="radio" name="urinationChanges" value="2" required> Да
             <input type="radio" name="urinationChanges" value="0"> Нет
         </div>
 
         <h2>Вопросы о домашних условиях и образе жизни</h2>
         <div class="question">
             <label>Курите ли вы или употребляете алкоголь?</label>
-            <input type="radio" name="smokingAlcohol" value="3" required> Да
+            <input type="radio" name="smokingAlcohol" value="2" required> Да
             <input type="radio" name="smokingAlcohol" value="0"> Нет
         </div>
         <div class="question">
             <label>Работаете ли вы в условиях, которые могут подвергать вас канцерогенам?</label>
-            <input type="radio" name="carcinogens" value="2" required> Да
+            <input type="radio" name="carcinogens" value="3" required> Да
             <input type="radio" name="carcinogens" value="0"> Нет
         </div>
         <div class="question">
@@ -169,7 +169,7 @@
         const doctorSiteButton = document.getElementById('doctorSiteButton');
         let message;
         
-        if (score >= 18) {
+        if (score >= 16) {
             message = 'Вам следует обратиться к врачу. Возможные проблемы со здоровьем.';
             doctorSiteButton.style.display = 'block'; // Показываем кнопку, если нужно обратиться к врачу
         } else {
