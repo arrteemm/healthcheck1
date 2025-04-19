@@ -1,4 +1,4 @@
-getElementById('surveyForm').addEventListener('submit', function(event) {
+document.getElementById('surveyForm').addEventListener('submit', function(event) {
         event.preventDefault();
         
         let score = 0;
