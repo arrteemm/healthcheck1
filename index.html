@@ -4,8 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css" >
-    
     <title>Опросник</title>
+     <script type="module">
+        // Импорты Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc,
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Конфигурация Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6-Vsgn33Em78haEFj2mkvgjxXqZSv6b8",
+            authDomain: "opros-d1e76.firebaseapp.com",
+            projectId: "opros-d1e76",
+            storageBucket: "opros-d1e76.firebasestorage.app",
+            messagingSenderId: "917484333793",
+            appId: "1:917484333793:web:4e9b41a7301c30f291e5a0",
+            measurementId: "G-HJR2XE9W8L"
+        };
+
+        // Инициализация Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Обработчик формы
+        document.getElementById('surveyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            if (!name) {
+                alert("Введите ФИО!");
+                return;
+            }
+
+            // Сбор данных
+            const answers = {};
+            let score = 0;
+            const questions = [
+                'fatigue', 'weightLoss', 'chronicPain',
+                'moleChanges', 'unusualBleeding', 'swallowingAppetite',
+                'infections', 'familyHistory', 'urinationChanges',
+                'smokingAlcohol', 'carcinogens', 'medicalChecks'
+            ];
+
+            questions.forEach(question => {
+                const answer = document.querySelector(`input[name="${question}"]:checked`);
+                if (answer) {
+                    answers[question] = answer.value;
+                    score += parseInt(answer.value);
+                }
+            });
+
+            try {
+                // Сохранение в Firestore
+                const docRef = await addDoc(collection(db, "surveys"), {
+                    name: name,
+                    score: score,
+                    answers: answers,
+                    timestamp: serverTimestamp()
+                });
+                
+                console.log("Документ записан с ID: ", docRef.id);
+                
+                // Показ результата
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <h2>Результат:</h2>
+                    <p>${score >= 18 ? '⚠️ Вам следует обратиться к врачу!' : '✅ Всё в порядке!'}</p>
+                `;
+                resultDiv.style.display = 'block';
+
+            } catch (error) {
+                console.error("Ошибка добавления документа: ", error);
+                alert("Ошибка при сохранении: " + error.message);
+            }
+        });
+
+        // Обработчик кнопки врача
+        document.getElementById('doctorSiteButton').addEventListener('click', () => {
+            window.location.href = 'https://www.example.com';
+        });
+    </script>
 </head>
 <body>
 
@@ -93,49 +175,6 @@
     <!-- Кнопка перенаправления на сайт врача -->
     <button id="doctorSiteButton" class="redirect-button" style="display: none;">Перейти к врачу</button>
 </div>
-<script>
-document.getElementById('surveyForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        let score = 0;
 
-        // Подсчет значений для каждого вопроса
-        const questions = [
-            'fatigue', 'weightLoss', 'chronicPain',
-            'moleChanges', 'unusualBleeding', 'swallowingAppetite',
-            'infections', 'familyHistory', 'urinationChanges',
-            'smokingAlcohol', 'carcinogens', 'medicalChecks'
-        ];
-
-        // Подсчет значений
-        questions.forEach(function(question) {
-            const answer = document.querySelector(`input[name="${question}"]:checked`);
-            if (answer) {
-                score += parseInt(answer.value); // Преобразование значения в число и прибавление
-            }
-        });
-
-        // Определение результата
-        const resultDiv = document.getElementById('result');
-        const doctorSiteButton = document.getElementById('doctorSiteButton');
-        let message;
-        
-        if (score >= 17) {
-            message = 'Вам следует обратиться к врачу. Возможные проблемы со здоровьем.';
-            doctorSiteButton.style.display = 'block'; // Показываем кнопку, если нужно обратиться к врачу
-        } else {
-            message = 'Нет явных признаков, чтобы обратиться к врачу.';
-            doctorSiteButton.style.display = 'none'; // Скрываем кнопку
-        }
-        
-        resultDiv.innerHTML = `<h2>Результат:</h2><p>${message}</p>`;
-        resultDiv.style.display = 'block';
-    });
-
-    // Обработчик для кнопки перенаправления на сайт
-document.getElementById('doctorSiteButton').addEventListener('click', function() {
-        window.location.href = 'https://www.example.com'; // Замените URL на нужный сайт
-    });
-</script>
 </body>
 </html>
