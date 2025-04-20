@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css" >
     <title>Опросник</title>
-     <script type="module">
-        // Импорты Firebase
+         <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { 
             getFirestore, 
-            collection, 
-            addDoc,
+            doc, 
+            setDoc,
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-        // Конфигурация Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA6-Vsgn33Em78haEFj2mkvgjxXqZSv6b8",
             authDomain: "opros-d1e76.firebaseapp.com",
@@ -26,21 +24,18 @@
             measurementId: "G-HJR2XE9W8L"
         };
 
-        // Инициализация Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Обработчик формы
         document.getElementById('surveyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('name').value;
+            const name = document.getElementById('name').value.trim();
             if (!name) {
                 alert("Введите ФИО!");
                 return;
             }
 
-            // Сбор данных
             const answers = {};
             let score = 0;
             const questions = [
@@ -59,31 +54,38 @@
             });
 
             try {
-                // Сохранение в Firestore
-                const docRef = await addDoc(collection(db, "surveys"), {
+                // Генерация ID документа
+                const docId = name.toLowerCase()
+                    .replace(/\s+/g, '_')
+                    .replace(/[^\wа-яА-ЯёЁ-]/g, '');
+                
+                if (!docId) {
+                    throw new Error("Недопустимые символы в ФИО");
+                }
+
+                await setDoc(doc(db, "surveys", docId), {
                     name: name,
                     score: score,
                     answers: answers,
                     timestamp: serverTimestamp()
                 });
                 
-                console.log("Документ записан с ID: ", docRef.id);
-                
-                // Показ результата
                 const resultDiv = document.getElementById('result');
                 resultDiv.innerHTML = `
                     <h2>Результат:</h2>
                     <p>${score >= 18 ? '⚠️ Вам следует обратиться к врачу!' : '✅ Всё в порядке!'}</p>
                 `;
                 resultDiv.style.display = 'block';
-
+                
+                if (score >= 18) {
+                    document.getElementById('doctorSiteButton').style.display = 'block';
+                }
             } catch (error) {
-                console.error("Ошибка добавления документа: ", error);
+                console.error("Ошибка:", error);
                 alert("Ошибка при сохранении: " + error.message);
             }
         });
 
-        // Обработчик кнопки врача
         document.getElementById('doctorSiteButton').addEventListener('click', () => {
             window.location.href = 'https://www.example.com';
         });
